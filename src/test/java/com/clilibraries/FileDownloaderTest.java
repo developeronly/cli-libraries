@@ -14,6 +14,7 @@ public class FileDownloaderTest {
 
     private static String location;
     private String url = "http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_2016-05-17.zip";
+    private String smallFileUrl = "http://www.sample-videos.com/csv/Sample-Spreadsheet-10-rows.csv";
 
     @BeforeClass
     public static void init() {
@@ -41,6 +42,28 @@ public class FileDownloaderTest {
         FileDownloader fileDownloader = new FileDownloader(url, location);
         assertEquals(url, fileDownloader.getUrl());
         assertEquals(location, fileDownloader.getLocation());
+    }
+
+    @Test
+    public void verifyExtractingFileNameFromUrl() {
+        FileDownloader fileDownloader = new FileDownloader(url, location);
+        assertEquals("dynamodb_local_2016-05-17.zip", fileDownloader.extractFileNameFromUrl());
+    }
+
+
+    @Test
+    public void tryDownloadingAFile() {
+        String url = "http://www.sample-videos.com/csv/Sample-Spreadsheet-10-rows.csv";
+        FileDownloader fileDownloader = new FileDownloader(smallFileUrl, location);
+        assertTrue(fileDownloader.download());
+    }
+
+    @Test
+    public void checkExistenceOfDownloadedFile() {
+        FileDownloader fileDownloader = new FileDownloader(smallFileUrl, location);
+        File downloadedFile = new File(location + File.separator + fileDownloader.extractFileNameFromUrl());
+        assertTrue(fileDownloader.download());
+        assertTrue(downloadedFile.exists());
     }
 
 }

@@ -7,7 +7,9 @@ import org.junit.Test;
 import java.io.File;
 import java.util.Objects;
 
+import static com.clilibraries.DownloadStatus.IDLE;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class FileDownloadManagerTest {
@@ -44,27 +46,23 @@ public class FileDownloadManagerTest {
         assertEquals(location, fileDownloadManager.getLocation());
     }
 
-    @Test
-    public void verifyExtractingFileNameFromUrl() {
-        FileDownloadManager fileDownloadManager = new FileDownloadManager(url, location);
-        assertEquals("dynamodb_local_2016-05-17.zip", fileDownloadManager.extractFileNameFromUrl());
-    }
-
 
     @Test
     public void tryDownloadingAFile() {
-        String url = "http://www.sample-videos.com/csv/Sample-Spreadsheet-10-rows.csv";
         FileDownloadManager fileDownloadManager = new FileDownloadManager(smallFileUrl, location);
-        assertTrue(fileDownloadManager.download());
+        DownloadStatus beforeDownloadingStatus = fileDownloadManager.getStatus();
+        assertEquals(beforeDownloadingStatus, IDLE);
+        fileDownloadManager.download();
+        DownloadStatus statusAfterStatingDownloading = fileDownloadManager.getStatus();
+        assertNotEquals(statusAfterStatingDownloading, IDLE);
     }
 
     @Test
     public void checkExistenceOfDownloadedFile() {
         FileDownloadManager fileDownloadManager = new FileDownloadManager(smallFileUrl, location);
-        File downloadedFile = new File(location + File.separator + fileDownloadManager.extractFileNameFromUrl());
-        assertTrue(fileDownloadManager.download());
+        File downloadedFile = new File(location + File.separator + FileNameExtractor.extractFileNameFromUrl
+                (smallFileUrl));
         assertTrue(downloadedFile.exists());
     }
-
 
 }

@@ -10,7 +10,7 @@ import java.util.Objects;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class FileDownloaderTest {
+public class FileDownloadManagerTest {
 
     private static String location;
     private String url = "http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_2016-05-17.zip";
@@ -33,37 +33,38 @@ public class FileDownloaderTest {
 
     @Test
     public void fileDownloaderShouldAcceptUrlAndLocationValues() {
-        FileDownloader fileDownloader = new FileDownloader(url, location);
-        assertTrue(Objects.nonNull(fileDownloader));
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(url, location);
+        assertTrue(Objects.nonNull(fileDownloadManager));
     }
 
     @Test
     public void verifyExistenceOfUrlAndLocationValues() {
-        FileDownloader fileDownloader = new FileDownloader(url, location);
-        assertEquals(url, fileDownloader.getUrl());
-        assertEquals(location, fileDownloader.getLocation());
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(url, location);
+        assertEquals(url, fileDownloadManager.getUrl());
+        assertEquals(location, fileDownloadManager.getLocation());
     }
 
     @Test
     public void verifyExtractingFileNameFromUrl() {
-        FileDownloader fileDownloader = new FileDownloader(url, location);
-        assertEquals("dynamodb_local_2016-05-17.zip", fileDownloader.extractFileNameFromUrl());
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(url, location);
+        assertEquals("dynamodb_local_2016-05-17.zip", fileDownloadManager.extractFileNameFromUrl());
     }
 
 
     @Test
     public void tryDownloadingAFile() {
         String url = "http://www.sample-videos.com/csv/Sample-Spreadsheet-10-rows.csv";
-        FileDownloader fileDownloader = new FileDownloader(smallFileUrl, location);
-        assertTrue(fileDownloader.download());
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(smallFileUrl, location);
+        assertTrue(fileDownloadManager.download());
     }
 
     @Test
     public void checkExistenceOfDownloadedFile() {
-        FileDownloader fileDownloader = new FileDownloader(smallFileUrl, location);
-        File downloadedFile = new File(location + File.separator + fileDownloader.extractFileNameFromUrl());
-        assertTrue(fileDownloader.download());
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(smallFileUrl, location);
+        File downloadedFile = new File(location + File.separator + fileDownloadManager.extractFileNameFromUrl());
+        assertTrue(fileDownloadManager.download());
         assertTrue(downloadedFile.exists());
     }
+
 
 }

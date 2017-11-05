@@ -9,13 +9,13 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class FileDownloader {
+public class FileDownloadManager {
 
     public static final int BUFFER = 1024;
     private final String url;
     private final String location;
 
-    public FileDownloader(String url, String location) {
+    public FileDownloadManager(String url, String location) {
         FileDownloaderParameterValidator.isValid(url, location);
         this.url = url;
         this.location = location;

@@ -1,6 +1,6 @@
 package com.clilibraries.validators;
 
-import com.clilibraries.FileDownloader;
+import com.clilibraries.FileDownloadManager;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -30,25 +30,25 @@ public class FileDownloaderParameterValidatorTest {
     @Test(expected = IllegalArgumentException.class)
     public void verifyWhetherUrlIsEmptyOrNot() {
         String url = "";
-        FileDownloader fileDownloader = new FileDownloader(url, location);
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(url, location);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void verifyWhetherUrlIsValidOrNot() {
         String url = "dummy url";
-        FileDownloader fileDownloader = new FileDownloader(url, location);
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(url, location);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void verifyWhetherLocationIsEmptyOrNot() {
         String location = "";
-        FileDownloader fileDownloader = new FileDownloader(url, location);
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(url, location);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void verifyWhetherLocationExistsOrNot() {
         String location = "dummy url";
-        FileDownloader fileDownloader = new FileDownloader(url, location);
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(url, location);
     }
 
 }

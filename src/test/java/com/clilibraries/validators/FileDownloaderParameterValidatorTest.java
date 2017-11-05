@@ -6,6 +6,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class FileDownloaderParameterValidatorTest {
 
@@ -22,10 +25,12 @@ public class FileDownloaderParameterValidatorTest {
     }
 
     @AfterClass
-    public static void destroy() {
-        File file = new File(location);
-        file.delete();
+    public static void destroy() throws IOException {
+        File directoryToBeDeleted = new File(location);
+        Files.walk(directoryToBeDeleted.toPath()).map(Path::toFile).forEach(File::delete);
+        directoryToBeDeleted.delete();
     }
+
 
     @Test(expected = IllegalArgumentException.class)
     public void verifyWhetherUrlIsEmptyOrNot() {

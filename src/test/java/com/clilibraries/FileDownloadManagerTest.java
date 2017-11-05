@@ -5,6 +5,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 
 import static com.clilibraries.DownloadStatus.IDLE;
@@ -15,11 +18,13 @@ import static org.junit.Assert.assertTrue;
 public class FileDownloadManagerTest {
 
     private static String location;
-    private String url = "http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_2016-05-17.zip";
+    private String largeFileUrl = "http://dynamodb-local.s3-website-us-west-2.amazonaws" +
+            ".com/dynamodb_local_2016-05-17.zip";
     private String smallFileUrl = "http://www.sample-videos.com/csv/Sample-Spreadsheet-10-rows.csv";
 
     @BeforeClass
     public static void init() {
+        System.out.println("Inside init");
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         File file = new File(classLoader.getResource("").getFile());
         File locationToDownloadFile = new File(file.getAbsolutePath() + File.separator + "download");
@@ -28,21 +33,22 @@ public class FileDownloadManagerTest {
     }
 
     @AfterClass
-    public static void destroy() {
-        File file = new File(location);
-        file.delete();
+    public static void destroy() throws IOException {
+        File directoryToBeDeleted = new File(location);
+        Files.walk(directoryToBeDeleted.toPath()).map(Path::toFile).forEach(File::delete);
+        directoryToBeDeleted.delete();
     }
 
     @Test
     public void fileDownloaderShouldAcceptUrlAndLocationValues() {
-        FileDownloadManager fileDownloadManager = new FileDownloadManager(url, location);
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(largeFileUrl, location);
         assertTrue(Objects.nonNull(fileDownloadManager));
     }
 
     @Test
     public void verifyExistenceOfUrlAndLocationValues() {
-        FileDownloadManager fileDownloadManager = new FileDownloadManager(url, location);
-        assertEquals(url, fileDownloadManager.getUrl());
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(largeFileUrl, location);
+        assertEquals(largeFileUrl, fileDownloadManager.getUrl());
         assertEquals(location, fileDownloadManager.getLocation());
     }
 
@@ -62,6 +68,7 @@ public class FileDownloadManagerTest {
         FileDownloadManager fileDownloadManager = new FileDownloadManager(smallFileUrl, location);
         File downloadedFile = new File(location + File.separator + FileNameExtractor.extractFileNameFromUrl
                 (smallFileUrl));
+        fileDownloadManager.download();
         assertTrue(downloadedFile.exists());
     }
 

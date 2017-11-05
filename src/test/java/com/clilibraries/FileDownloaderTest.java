@@ -12,7 +12,7 @@ public class FileDownloaderTest {
     @Test
     public void fileDownloaderShouldAcceptUrlAndLocationValues() {
         String url = "http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_2016-05-17.zip";
-        String location = "dummy location";
+        String location = "/home/dheeraj/Downloads";
         FileDownloader fileDownloader = new FileDownloader(url, location);
         assertTrue(Objects.nonNull(fileDownloader));
     }
@@ -20,7 +20,7 @@ public class FileDownloaderTest {
     @Test
     public void verifyExistenceOfUrlAndLocationValues() {
         String url = "http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_2016-05-17.zip";
-        String location = "dummy location";
+        String location = "/home/dheeraj/Downloads";
         FileDownloader fileDownloader = new FileDownloader(url, location);
         assertEquals(url, fileDownloader.getUrl());
         assertEquals(location, fileDownloader.getLocation());
@@ -29,14 +29,28 @@ public class FileDownloaderTest {
     @Test(expected = IllegalArgumentException.class)
     public void verifyWhetherUrlIsEmptyOrNot() {
         String url = "";
-        String location = "dummy location";
+        String location = "/home/dheeraj/Downloads";
         FileDownloader fileDownloader = new FileDownloader(url, location);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void verifyWhetherUrlIsValidOrNot() {
         String url = "dummy url";
-        String location = "dummy location";
+        String location = "/home/dheeraj/Downloads";
+        FileDownloader fileDownloader = new FileDownloader(url, location);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void verifyWhetherLocationIsEmptyOrNot() {
+        String url = "http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_2016-05-17.zip";
+        String location = "";
+        FileDownloader fileDownloader = new FileDownloader(url, location);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void verifyWhetherLocationExistsOrNot() {
+        String url = "http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_2016-05-17.zip";
+        String location = "dummy url";
         FileDownloader fileDownloader = new FileDownloader(url, location);
     }
 

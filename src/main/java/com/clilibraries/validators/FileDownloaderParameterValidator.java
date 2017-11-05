@@ -12,8 +12,10 @@ public class FileDownloaderParameterValidator {
     }
 
     public static void isValid(String urlToDownloadFileFrom, String locationToSaveDownloadedFie) {
+        System.out.println("Validating parameters. Please wait...");
         validateUrl(urlToDownloadFileFrom);
         validateLocation(locationToSaveDownloadedFie);
+        System.out.println("All Good. Downloading will start in a moment.");
     }
 
     private static void validateLocation(String locationToSaveDownloadedFie) {

@@ -11,7 +11,7 @@ public class FileDownloaderTest {
 
     @Test
     public void fileDownloaderShouldAcceptUrlAndLocationValues() {
-        String url = "dummy url";
+        String url = "http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_2016-05-17.zip";
         String location = "dummy location";
         FileDownloader fileDownloader = new FileDownloader(url, location);
         assertTrue(Objects.nonNull(fileDownloader));
@@ -19,7 +19,7 @@ public class FileDownloaderTest {
 
     @Test
     public void verifyExistenceOfUrlAndLocationValues() {
-        String url = "dummy url";
+        String url = "http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_2016-05-17.zip";
         String location = "dummy location";
         FileDownloader fileDownloader = new FileDownloader(url, location);
         assertEquals(url, fileDownloader.getUrl());
@@ -39,6 +39,5 @@ public class FileDownloaderTest {
         String location = "dummy location";
         FileDownloader fileDownloader = new FileDownloader(url, location);
     }
-
 
 }

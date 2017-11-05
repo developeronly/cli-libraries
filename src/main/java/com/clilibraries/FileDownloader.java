@@ -15,6 +15,7 @@ public class FileDownloader {
             throw new IllegalArgumentException("URL can't be empty. Please provide valid URL.");
         if (isUrlMalformed(url))
             throw new IllegalArgumentException("Please provide valid URL");
+
         this.url = url;
         this.location = location;
     }
@@ -24,7 +25,6 @@ public class FileDownloader {
             try {
                 URL url = new URL(urlOfFile);
             } catch (MalformedURLException e) {
-                e.printStackTrace();
                 return true;
             }
         }

@@ -8,7 +8,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static com.clilibraries.DownloadStatus.COMPLETED;
-import static com.clilibraries.DownloadStatus.DOWNLOADING;
 import static com.clilibraries.DownloadStatus.IDLE;
 
 public class FileDownloader implements Downloader {
@@ -63,7 +62,6 @@ public class FileDownloader implements Downloader {
         @Override
         public void run() {
             try {
-                currentStatus = DOWNLOADING;
                 URL url = new URL(getUrl());
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {

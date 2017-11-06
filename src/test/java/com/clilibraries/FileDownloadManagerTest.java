@@ -57,21 +57,27 @@ public class FileDownloadManagerTest {
 
 
     @Test
-    public void tryDownloadingAFile() {
+    public void tryDownloadingAFile() throws InterruptedException {
         FileDownloadManager fileDownloadManager = new FileDownloadManager(smallSizeFileUrl, location);
         DownloadStatus beforeDownloadingStatus = fileDownloadManager.getStatus();
         assertEquals(beforeDownloadingStatus, IDLE);
         fileDownloadManager.download();
+        while (COMPLETED != fileDownloadManager.getStatus()) {
+            Thread.sleep(200);
+        }
         DownloadStatus statusAfterStatingDownloading = fileDownloadManager.getStatus();
         assertNotEquals(statusAfterStatingDownloading, IDLE);
     }
 
     @Test
-    public void checkExistenceOfDownloadedFile() {
+    public void checkExistenceOfDownloadedFile() throws InterruptedException {
         FileDownloadManager fileDownloadManager = new FileDownloadManager(smallSizeFileUrl, location);
         File downloadedFile = new File(location + File.separator + FileNameExtractor.extractFileNameFromUrl
                 (smallSizeFileUrl));
         fileDownloadManager.download();
+        while (COMPLETED != fileDownloadManager.getStatus()) {
+            Thread.sleep(200);
+        }
         assertTrue(downloadedFile.exists());
     }
 

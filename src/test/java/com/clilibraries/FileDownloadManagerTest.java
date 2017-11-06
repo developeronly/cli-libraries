@@ -28,7 +28,6 @@ public class FileDownloadManagerTest {
 
     @BeforeClass
     public static void init() {
-        System.out.println("Inside init");
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         File file = new File(classLoader.getResource("").getFile());
         File locationToDownloadFile = new File(file.getAbsolutePath() + File.separator + "download");

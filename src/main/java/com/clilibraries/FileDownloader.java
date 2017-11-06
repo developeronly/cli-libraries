@@ -8,12 +8,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static com.clilibraries.DownloadStatus.COMPLETED;
+import static com.clilibraries.DownloadStatus.DOWNLOADING;
 import static com.clilibraries.DownloadStatus.IDLE;
 
 public class FileDownloader implements Downloader {
 
-    public static final int BUFFER = 1024;
-    private static final int BYTE = 8;
+    public static final int BUFFER = 1024 * 4;
 
     private final String url;
     private final String location;
@@ -21,6 +21,7 @@ public class FileDownloader implements Downloader {
     private volatile DownloadStatus currentStatus;
     private volatile int totalBytes = 1;
     private volatile int totalBytesRead = 0;
+    private volatile boolean continueDownloading = true;
 
     public FileDownloader(String url, String location) {
         this.url = url;
@@ -35,8 +36,7 @@ public class FileDownloader implements Downloader {
     }
 
     private void setTotalBytes(HttpURLConnection httpURLConnection) {
-        int contentLength = httpURLConnection.getContentLength();
-        totalBytes = contentLength / BYTE;
+        totalBytes = httpURLConnection.getContentLength();
     }
 
     @Override
@@ -46,7 +46,17 @@ public class FileDownloader implements Downloader {
 
     @Override
     public int getProgressInPercentage() {
-        return totalBytesRead / totalBytes * 100;
+        return (totalBytesRead * 100) / totalBytes;
+    }
+
+    @Override
+    public void pause() {
+        continueDownloading = false;
+    }
+
+    @Override
+    public void resume() {
+        continueDownloading = true;
     }
 
     public String getUrl() {
@@ -62,6 +72,7 @@ public class FileDownloader implements Downloader {
         @Override
         public void run() {
             try {
+                currentStatus = DOWNLOADING;
                 URL url = new URL(getUrl());
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -72,13 +83,21 @@ public class FileDownloader implements Downloader {
                     int bytesRead = -1;
                     byte[] buffer = new byte[BUFFER];
                     while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        totalBytesRead = totalBytesRead + BUFFER;
-                        outputStream.write(buffer, 0, bytesRead);
+                        if (continueDownloading) {
+                            totalBytesRead += bytesRead;
+                            outputStream.write(buffer, 0, bytesRead);
+                        } else {
+                            while (continueDownloading != true) {
+                                Thread.sleep(1000);
+                            }
+                        }
                     }
                     outputStream.close();
                     inputStream.close();
                 }
             } catch (IOException e) {
+                System.out.println(e.getMessage());
+            } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
             }
             currentStatus = COMPLETED;

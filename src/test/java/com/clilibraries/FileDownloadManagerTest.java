@@ -93,10 +93,35 @@ public class FileDownloadManagerTest {
         fileDownloadManager.download();
         while (COMPLETED != fileDownloadManager.getStatus()) {
             Thread.sleep(200);
+            System.out.println("Progress: " + fileDownloadManager.progress());
             progress.add(fileDownloadManager.progress());
         }
         progress.stream().forEach(System.out::println);
         assertTrue(downloadedFile.exists());
+    }
+
+    @Test
+    public void verifyPausingDownloadingFile() throws InterruptedException {
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(mediumSizeFileUrl, location);
+        File downloadedFile = new File(location + File.separator +
+                FileNameExtractor.extractFileNameFromUrl(mediumSizeFileUrl));
+        fileDownloadManager.download();
+        while (IDLE == fileDownloadManager.getStatus()) {
+            Thread.sleep(200);
+        }
+        fileDownloadManager.pause();
+        int progressAfterPause = fileDownloadManager.progress();
+        for (int index = 0; index < 10; index++) {
+            Thread.sleep(500);
+            assertEquals(progressAfterPause, fileDownloadManager.progress());
+        }
+        fileDownloadManager.resume();
+        while (COMPLETED != fileDownloadManager.getStatus()) {
+            Thread.sleep(1000);
+        }
+        assertEquals(progressAfterPause, fileDownloadManager.progress());
+        assertTrue(downloadedFile.exists());
+
     }
 
 }

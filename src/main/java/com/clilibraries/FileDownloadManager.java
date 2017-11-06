@@ -35,4 +35,12 @@ public class FileDownloadManager {
     public int progress() {
         return downloader.getProgressInPercentage();
     }
+
+    public void pause() {
+        downloader.pause();
+    }
+
+    public void resume() {
+        downloader.resume();
+    }
 }

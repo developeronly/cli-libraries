@@ -6,4 +6,8 @@ public interface Downloader {
     DownloadStatus status();
 
     int getProgressInPercentage();
+
+    void pause();
+
+    void resume();
 }

@@ -119,7 +119,7 @@ public class FileDownloadManagerTest {
         while (COMPLETED != fileDownloadManager.getStatus()) {
             Thread.sleep(1000);
         }
-        assertEquals(progressAfterPause, fileDownloadManager.progress());
+        assertTrue(fileDownloadManager.progress() > progressAfterPause);
         assertTrue(downloadedFile.exists());
 
     }

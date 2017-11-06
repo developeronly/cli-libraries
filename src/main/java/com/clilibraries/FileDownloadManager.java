@@ -31,4 +31,8 @@ public class FileDownloadManager {
     public DownloadStatus getStatus() {
         return downloader.status();
     }
+
+    public int progress() {
+        return downloader.getProgressInPercentage();
+    }
 }

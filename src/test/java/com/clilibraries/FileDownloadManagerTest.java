@@ -8,8 +8,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import static com.clilibraries.DownloadStatus.COMPLETED;
 import static com.clilibraries.DownloadStatus.IDLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -18,9 +21,10 @@ import static org.junit.Assert.assertTrue;
 public class FileDownloadManagerTest {
 
     private static String location;
-    private String largeFileUrl = "http://dynamodb-local.s3-website-us-west-2.amazonaws" +
+    private String largeSizeFileUrl = "http://dynamodb-local.s3-website-us-west-2.amazonaws" +
             ".com/dynamodb_local_2016-05-17.zip";
-    private String smallFileUrl = "http://www.sample-videos.com/csv/Sample-Spreadsheet-10-rows.csv";
+    private String smallSizeFileUrl = "http://www.sample-videos.com/csv/Sample-Spreadsheet-10-rows.csv";
+    private String mediumSizeFileUrl = "http://speedtest.ftp.otenet.gr/files/test10Mb.db";
 
     @BeforeClass
     public static void init() {
@@ -41,21 +45,21 @@ public class FileDownloadManagerTest {
 
     @Test
     public void fileDownloaderShouldAcceptUrlAndLocationValues() {
-        FileDownloadManager fileDownloadManager = new FileDownloadManager(largeFileUrl, location);
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(largeSizeFileUrl, location);
         assertTrue(Objects.nonNull(fileDownloadManager));
     }
 
     @Test
     public void verifyExistenceOfUrlAndLocationValues() {
-        FileDownloadManager fileDownloadManager = new FileDownloadManager(largeFileUrl, location);
-        assertEquals(largeFileUrl, fileDownloadManager.getUrl());
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(largeSizeFileUrl, location);
+        assertEquals(largeSizeFileUrl, fileDownloadManager.getUrl());
         assertEquals(location, fileDownloadManager.getLocation());
     }
 
 
     @Test
     public void tryDownloadingAFile() {
-        FileDownloadManager fileDownloadManager = new FileDownloadManager(smallFileUrl, location);
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(smallSizeFileUrl, location);
         DownloadStatus beforeDownloadingStatus = fileDownloadManager.getStatus();
         assertEquals(beforeDownloadingStatus, IDLE);
         fileDownloadManager.download();
@@ -65,10 +69,28 @@ public class FileDownloadManagerTest {
 
     @Test
     public void checkExistenceOfDownloadedFile() {
-        FileDownloadManager fileDownloadManager = new FileDownloadManager(smallFileUrl, location);
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(smallSizeFileUrl, location);
         File downloadedFile = new File(location + File.separator + FileNameExtractor.extractFileNameFromUrl
-                (smallFileUrl));
+                (smallSizeFileUrl));
         fileDownloadManager.download();
+        assertTrue(downloadedFile.exists());
+    }
+
+    @Test
+    public void verifyProgressWhileDownloadingAFile() throws InterruptedException {
+        FileDownloadManager fileDownloadManager = new FileDownloadManager(mediumSizeFileUrl, location);
+        File downloadedFile = new File(location + File.separator +
+                FileNameExtractor.extractFileNameFromUrl(mediumSizeFileUrl));
+        List<Integer> progress = new ArrayList<>();
+        int initialProgress = fileDownloadManager.progress();
+        System.out.println("Initial Progress: " + initialProgress);
+        progress.add(initialProgress);
+        fileDownloadManager.download();
+        while (COMPLETED != fileDownloadManager.getStatus()) {
+            Thread.sleep(200);
+            progress.add(fileDownloadManager.progress());
+        }
+        progress.stream().forEach(System.out::println);
         assertTrue(downloadedFile.exists());
     }
 

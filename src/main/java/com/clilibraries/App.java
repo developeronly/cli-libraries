@@ -1,8 +1,13 @@
 package com.clilibraries;
 
+import me.tongfei.progressbar.ProgressBar;
+
 import static com.clilibraries.DownloadStatus.COMPLETED;
 
 public class App {
+
+    public static final int MAX = 100;
+    public static final int TOTAL_NUMBER_OF_PARAMETERS = 2;
 
     public static FileDownloadManager getManager(String[] arguments) {
         String url = arguments[0];
@@ -11,24 +16,27 @@ public class App {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        if (args.length != 2) {
+        if (args.length != TOTAL_NUMBER_OF_PARAMETERS) {
             System.out.println("Please enter valid inputs.");
             return;
         }
         FileDownloadManager fileDownloadManager = getManager(args);
         fileDownloadManager.showHelp();
-        int currentProgress = 0;
-        int previousProgress = 0;
-        fileDownloadManager.download();
 
-        System.out.print(currentProgress + " ");
+        ProgressBar pb = new ProgressBar("Download", MAX);
+        pb.start();
+
+        fileDownloadManager.download();
+        pb.step();
+
         while (COMPLETED != fileDownloadManager.getStatus()) {
-            currentProgress = fileDownloadManager.progress();
-            if (currentProgress != previousProgress) {
-                System.out.print(currentProgress + " ");
-                previousProgress = currentProgress;
-            }
+            pb.stepTo(fileDownloadManager.progress());
             Thread.sleep(1000);
         }
+        pb.stepTo(MAX);
+        pb.stop();
+        System.out.println();
+        System.out.println("Downloading completed.");
+
     }
 }

@@ -13,7 +13,9 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.clilibraries.DownloadStatus.COMPLETED;
+import static com.clilibraries.DownloadStatus.DOWNLOADING;
 import static com.clilibraries.DownloadStatus.IDLE;
+import static com.clilibraries.DownloadStatus.PAUSE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
@@ -88,15 +90,13 @@ public class FileDownloadManagerTest {
                 FileNameExtractor.extractFileNameFromUrl(mediumSizeFileUrl));
         List<Integer> progress = new ArrayList<>();
         int initialProgress = fileDownloadManager.progress();
-        System.out.println("Initial Progress: " + initialProgress);
         progress.add(initialProgress);
         fileDownloadManager.download();
         while (COMPLETED != fileDownloadManager.getStatus()) {
             Thread.sleep(200);
-            System.out.println("Progress: " + fileDownloadManager.progress());
             progress.add(fileDownloadManager.progress());
         }
-        progress.stream().forEach(System.out::println);
+        progress.stream().forEach(System.out::print);
         assertTrue(downloadedFile.exists());
     }
 
@@ -110,18 +110,19 @@ public class FileDownloadManagerTest {
             Thread.sleep(200);
         }
         fileDownloadManager.pause();
+        assertEquals(PAUSE, fileDownloadManager.getStatus());
         int progressAfterPause = fileDownloadManager.progress();
         for (int index = 0; index < 10; index++) {
             Thread.sleep(500);
             assertEquals(progressAfterPause, fileDownloadManager.progress());
         }
         fileDownloadManager.resume();
+        assertEquals(DOWNLOADING, fileDownloadManager.getStatus());
         while (COMPLETED != fileDownloadManager.getStatus()) {
             Thread.sleep(1000);
         }
         assertTrue(fileDownloadManager.progress() > progressAfterPause);
         assertTrue(downloadedFile.exists());
-
     }
 
 }

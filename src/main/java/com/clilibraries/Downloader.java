@@ -10,4 +10,6 @@ public interface Downloader {
     void pause();
 
     void resume();
+
+    void stop();
 }

@@ -43,4 +43,15 @@ public class FileDownloadManager {
     public void resume() {
         downloader.resume();
     }
+
+    public void stop() {
+        downloader.stop();
+    }
+
+    public void showHelp() {
+        System.out.println("Press 'p' to pause the downloading.");
+        System.out.println("Press 'r' to resume the downloading.");
+        System.out.println("Press 's' to stop the downloading.");
+    }
+
 }

@@ -11,6 +11,7 @@ import static com.clilibraries.DownloadStatus.COMPLETED;
 import static com.clilibraries.DownloadStatus.DOWNLOADING;
 import static com.clilibraries.DownloadStatus.IDLE;
 import static com.clilibraries.DownloadStatus.PAUSE;
+import static com.clilibraries.DownloadStatus.STOP;
 
 public class FileDownloader implements Downloader {
 
@@ -62,6 +63,12 @@ public class FileDownloader implements Downloader {
         continueDownloading = true;
     }
 
+    @Override
+    public void stop() {
+        currentStatus = STOP;
+        continueDownloading = false;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -86,6 +93,7 @@ public class FileDownloader implements Downloader {
                     int bytesRead = -1;
                     byte[] buffer = new byte[BUFFER];
                     while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        if (currentStatus == STOP) return;
                         if (continueDownloading) {
                             totalBytesRead += bytesRead;
                             outputStream.write(buffer, 0, bytesRead);

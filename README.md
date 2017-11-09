@@ -4,6 +4,7 @@ cli-libraries - For downloading files from internet
 
 - [DESCRIPTION](#description)
 - [INSTALLATION](#installation)
+- [TODO](#TODO)
 
 # DESCRIPTION
 **cli-libraries** is a command-line program to download files from internet. It requires the JDK, version 8, and it is not platform specific. It should work on your Unix box, on Windows or on Mac OS X. It is released to the public domain, which means you can modify it, redistribute it or use it however you like.
@@ -49,3 +50,14 @@ You can run this generated jar using following command with valid arguments:
     java -jar path/to/the/generated/jar/file fileUrl location
 
 The file will get downloaded and on successful download console will print the message likewise.
+
+# TODO
+ - `Logic for pausing, resuming and stoping downloading a file is implemented and test cases are written for the same. But it's not interactive yet.`
+ - `Need to implement be some kind of listeners like onPause, onStop, onResume and onProgress...`
+ - `Threading mechanism can be better than this. Like wait, notify, notifyAll while pausing and other operations`
+ - `Thread pool can be use to download multiple files. Showing each one's progress is the real challenge i guess.`
+ - `And many more`
+ - `Please add your suggestions and review's by raising issues.`
+ 
+
+

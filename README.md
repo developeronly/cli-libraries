@@ -9,7 +9,7 @@ cli-libraries - For downloading files from internet
 # DESCRIPTION
 **cli-libraries** is a command-line program to download files from internet. It requires the JDK, version 8, and it is not platform specific. It should work on your Unix box, on Windows or on Mac OS X. It is released to the public domain, which means you can modify it, redistribute it or use it however you like.
 
-    youtube-dl [URL] [Location]
+    cli-libraries [URL] [Location]
 
 # INSTALLATION
 

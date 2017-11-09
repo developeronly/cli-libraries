@@ -25,7 +25,7 @@ public class FileDownloadManagerTest {
     private static String location;
     private String largeSizeFileUrl = "http://dynamodb-local.s3-website-us-west-2.amazonaws" +
             ".com/dynamodb_local_2016-05-17.zip";
-    private String smallSizeFileUrl = "http://www.sample-videos.com/csv/Sample-Spreadsheet-10-rows.csv";
+    private String smallSizeFileUrl = "http://speedtest.ftp.otenet.gr/files/test100k.db";
     private String mediumSizeFileUrl = "http://speedtest.ftp.otenet.gr/files/test10Mb.db";
 
     @BeforeClass

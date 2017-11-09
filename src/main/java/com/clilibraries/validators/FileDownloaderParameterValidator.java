@@ -58,5 +58,4 @@ public class FileDownloaderParameterValidator {
         return StringUtils.isBlank(urlToDownloadFileFrom);
     }
 
-
 }
